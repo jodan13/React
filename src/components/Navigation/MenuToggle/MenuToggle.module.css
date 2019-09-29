@@ -1,0 +1,47 @@
+.MenuToggle {
+    display: block;
+    width: 26px;
+    height: 12px;
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    font-size: 20px;
+    color: #fff;
+    transition: opacity, left .22s ease-in;
+    z-index: 100;
+
+}
+
+.MenuToggle span {
+    display: block;
+    height: 1.5px;
+    width: 100%;
+    background-color: #fff;
+    margin-bottom: 4.5px;
+    transition: 0.5s all;
+    cursor: pointer;
+}
+
+.MenuToggle:hover {
+    opacity: .7;
+}
+
+.MenuToggle.open {
+    left: 280px;
+}
+
+.MenuToggle.open span {
+    margin-bottom: -2px;
+}
+
+.MenuToggle.open span:nth-child(1) {
+    transform: translateY(3px) rotate(-45deg);
+}
+
+.MenuToggle.open span:nth-child(2) {
+    display: none;
+}
+
+.MenuToggle.open span:nth-child(3) {
+    transform: translateY(3px) rotate(45deg);
+}
