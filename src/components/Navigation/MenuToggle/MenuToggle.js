@@ -1,10 +1,10 @@
 import React from "react";
-import bars from "./bars.svg";
-import times from "./times.svg";
+// import bars from "./bars.svg";
+// import times from "./times.svg";
 import classes from "./MenuToggle.module.css";
 
 const MenuToggle = props => {
-  //   let src;
+    //let src;
   const cls = [classes.MenuToggle];
   if (props.isOpen) {
     // src = times;
