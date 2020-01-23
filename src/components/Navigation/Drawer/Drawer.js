@@ -19,7 +19,8 @@ class Drawer extends Component {
           to={link.to}
           exact={link.exact}
           activeClassName={classes.active}
-        >{link.lable}</NavLink>
+          onClick={this.props.onClose}
+          >{link.lable}</NavLink>
         </li>
       );
     });

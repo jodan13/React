@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 
-export default class QuizList extends Component {
+export default class QuizCreator extends Component {
     render(){
         return(
             <div>
-                <h1>Quiz List</h1>
+                <h1>Quiz Creator</h1>
             </div>
         )
     }
