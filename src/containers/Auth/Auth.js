@@ -3,9 +3,11 @@ import classes from "./Auth.module.css";
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import is from "../../../node_modules/is_js/is";
+import Axios from "axios";
 
 export default class Auth extends Component {
   state = {
+    isFormValid: false,
     formControls: {
       email: {
         value: "",
@@ -34,9 +36,39 @@ export default class Auth extends Component {
     }
   };
 
-  loginHandler = () => {};
+  loginHandler = async () => {
+    const authData = {
+      email: this.state.formControls.email.value,
+      password: this.state.formControls.password.value,
+      returnSecureToken: true
+    };
+    try {
+      const response = await Axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA8dy0nTuf5tXUO3AeacW6Nvf7ZTfY96mk",
+        authData
+      );
+      console.log(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-  registerHandler = () => {};
+  registerHandler = async () => {
+    const authData = {
+      email: this.state.formControls.email.value,
+      password: this.state.formControls.password.value,
+      returnSecureToken: true
+    };
+    try {
+      const response = await Axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA8dy0nTuf5tXUO3AeacW6Nvf7ZTfY96mk",
+        authData
+      );
+      console.log(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   submitHandler = event => {
     event.preventDefault();
@@ -61,8 +93,6 @@ export default class Auth extends Component {
   }
 
   onChangeHandler = (event, controlName) => {
-    console.log(`${controlName}:`, event.target.value);
-
     const formControls = { ...this.state.formControls };
     const control = { ...formControls[controlName] };
 
@@ -72,8 +102,15 @@ export default class Auth extends Component {
 
     formControls[controlName] = control;
 
+    let isFormValid = true;
+
+    Object.keys(formControls).forEach(name => {
+      isFormValid = formControls[name].valid && isFormValid;
+    });
+
     this.setState({
-      formControls
+      formControls,
+      isFormValid
     });
   };
 
@@ -104,11 +141,19 @@ export default class Auth extends Component {
           <div className={classes.AuthForm}>
             {this.renderInputs()}
             <div>
-              <Button type="success" onClick={this.loginHandler}>
+              <Button
+                type="success"
+                onClick={this.loginHandler}
+                disabled={!this.state.isFormValid}
+              >
                 Войти
               </Button>
 
-              <Button type="primary" onClick={this.registerHandler}>
+              <Button
+                type="primary"
+                onClick={this.registerHandler}
+                disabled={!this.state.isFormValid}
+              >
                 Зарегистрироваться
               </Button>
             </div>

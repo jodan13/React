@@ -2,43 +2,18 @@ import React, { Component } from "react";
 import classes from "./Quiz.module.css";
 import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
 import FinishedQuiz from "../../components/FinishedQuiz/FinishedQuiz";
+import Axios from "../../axios/axios-quiz";
+import Loader from "../../components/UI/Loader/Loader";
 // import { stat } from "fs";
 
 class Quiz extends Component {
-  otv = 3654 - 2454;
-  otv2 = 348 / 4;
-  otv3 = 1856 + 932;
   state = {
     results: {},
     isFinished: false,
     activeQuestion: 0,
     answerState: null,
-    quiz: [
-      {
-        question: "Алый это?",
-        rightAnswerId: 3,
-        id: 1,
-        answers: [{ text: "Парус?", id: 1 }, { text: "Имя", id: 2 }, { text: "Цвет", id: 3 }, { text: "Другой", id: 4 }]
-      },
-      {
-        question: "Сколько будет 348 / 4?",
-        rightAnswerId: 3,
-        id: 2,
-        answers: [{ text: "123", id: 1 }, { text: "234", id: 2 }, { text: this.otv2, id: 3 }, { text: "678", id: 4 }]
-      },
-      {
-        question: "Сколько будет 3534-2354?",
-        rightAnswerId: 2,
-        id: 3,
-        answers: [{ text: "2365", id: 1 }, { text: this.otv, id: 2 }, { text: "4538", id: 3 }, { text: "3543", id: 4 }]
-      },
-      {
-        question: "Сколько будет 1856 + 932?",
-        rightAnswerId: 1,
-        id: 4,
-        answers: [{ text: this.otv3, id: 1 }, { text: "2574", id: 2 }, { text: "4538", id: 3 }, { text: "3543", id: 4 }]
-      }
-    ]
+    quiz: [],
+    loading: true
   };
 
   onAnswerClickHandler = answerId => {
@@ -65,7 +40,10 @@ class Quiz extends Component {
             isFinished: true
           });
         } else {
-          this.setState({ activeQuestion: this.state.activeQuestion + 1, answerState: null });
+          this.setState({
+            activeQuestion: this.state.activeQuestion + 1,
+            answerState: null
+          });
         }
         window.clearTimeout(timeout);
       }, 1000);
@@ -81,8 +59,20 @@ class Quiz extends Component {
     return this.state.activeQuestion + 1 === this.state.quiz.length;
   }
 
-  componentDidMount(){
-    console.log("Quiz ID = ", this.props.match.params.id)
+  async componentDidMount() {
+    try {
+      const response = await Axios.get(
+        `/quizes/${this.props.match.params.id}.json`
+      );
+      const quiz = response.data;
+
+      this.setState({
+        quiz,
+        loading: false
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   retryHandler = () => {
@@ -99,8 +89,15 @@ class Quiz extends Component {
       <div className={classes.Quiz}>
         <div className={classes.QuizWrapper}>
           <h1>Ответьте на все вопросы</h1>
-          {this.state.isFinished ? (
-            <FinishedQuiz results={this.state.results} quiz={this.state.quiz} onRetry={this.retryHandler} />
+
+          {this.state.loading ? (
+            <Loader />
+          ) : this.state.isFinished ? (
+            <FinishedQuiz
+              results={this.state.results}
+              quiz={this.state.quiz}
+              onRetry={this.retryHandler}
+            />
           ) : (
             <ActiveQuiz
               answers={this.state.quiz[this.state.activeQuestion].answers}

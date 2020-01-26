@@ -12,9 +12,7 @@ const Input = props => {
 
   if (isInvalid(props)) {
     cls.push(classes.invalid);
-    console.log(cls);
   }
-  console.log(props);
   return (
     <div className={cls.join(" ")}>
       <label htmlFor={htmlFor}>{props.label}</label>
